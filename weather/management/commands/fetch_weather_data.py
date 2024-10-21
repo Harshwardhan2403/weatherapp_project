@@ -13,29 +13,26 @@ class Command(BaseCommand):
         response = requests.get(url)
         data = response.text.splitlines()
 
-        # Print the response for debugging
         print("Response data:", data)
 
-        # Update within your loop in fetch_weather_data.py
-
-for line in data[1:]:  # type: ignore # Skip the header line
+for line in data[1:]: 
     parts = line.split()
 
-    # Check for enough parts
+   
     if len(parts) < 3:
         print("Skipping line due to insufficient parts:", line)
         continue
 
-    # Extract date
+    
     raw_date = parts[0]
     
-    # Example logic to convert a year to a full date
-    if len(raw_date) == 4:  # Assuming it's just the year
-        date = f"{raw_date}-01-01"  # Default to January 1st
+   
+    if len(raw_date) == 4:  
+        date = f"{raw_date}-01-01"  
     else:
-        date = raw_date  # or handle differently if it's a different format
+        date = raw_date  
 
-    print("Parsed date:", date)  # Debugging output
+    print("Parsed date:", date)  
 
     try:
         tmax = float(parts[1])
@@ -43,6 +40,5 @@ for line in data[1:]:  # type: ignore # Skip the header line
     except ValueError as e:
         print("Error converting to float:", e, "for line:", line)
         continue
-
-    # Save data to the database
+    
     WeatherData.objects.create(date=date, tmax=tmax, tmin=tmin)
